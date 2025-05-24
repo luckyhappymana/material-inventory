@@ -3,16 +3,27 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     try {
-      const data = await res.json();
+      // レスポンスをクローンして、元のレスポンスを変更せずに使用
+      const clonedRes = res.clone();
+      const data = await clonedRes.json();
       const error: any = new Error(data.message || res.statusText);
       error.response = { data, status: res.status };
       throw error;
     } catch (error: any) {
       if (error.response) throw error;
-      const text = await res.text();
-      const newError: any = new Error(`${res.status}: ${text || res.statusText}`);
-      newError.response = { status: res.status };
-      throw newError;
+      try {
+        // エラー処理中に元のレスポンスが既に読み込まれている可能性があるため、再度クローン
+        const clonedRes = res.clone();
+        const text = await clonedRes.text();
+        const newError: any = new Error(`${res.status}: ${text || res.statusText}`);
+        newError.response = { status: res.status };
+        throw newError;
+      } catch (e) {
+        // レスポンスが既に読み込まれている場合のフォールバック
+        const newError: any = new Error(`${res.status}: ${res.statusText}`);
+        newError.response = { status: res.status };
+        throw newError;
+      }
     }
   }
 }
@@ -22,7 +33,15 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  // API URLの設定（本番環境では絶対パスを使用）
+  const API_BASE_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('replit')
+    ? '' // 開発環境では相対パス
+    : 'https://material-inventory-glk2.onrender.com'; // 本番環境では絶対パス
+  
+  // URLの先頭にベースURLを追加
+  const fullUrl = url.startsWith('/') ? `${API_BASE_URL}${url}` : url;
+  
+  const res = await fetch(fullUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
@@ -39,13 +58,15 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    // URLの先頭に / があることを確認
-    let url = queryKey[0] as string;
-    if (!url.startsWith('/')) {
-      url = '/' + url;
-    }
+    // API URLの設定（本番環境では絶対パスを使用）
+    const API_BASE_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('replit')
+      ? '' // 開発環境では相対パス
+      : 'https://material-inventory-glk2.onrender.com'; // 本番環境では絶対パス
     
-    const res = await fetch(url, {
+    const urlKey = queryKey[0] as string;
+    const fullUrl = urlKey.startsWith('/') ? `${API_BASE_URL}${urlKey}` : urlKey;
+    
+    const res = await fetch(fullUrl, {
       credentials: "include",
     });
 
@@ -54,7 +75,12 @@ export const getQueryFn: <T>(options: {
     }
 
     await throwIfResNotOk(res);
-    return await res.json();
+    try {
+      return await res.json();
+    } catch (error) {
+      console.error("Error parsing JSON response:", error);
+      return null;
+    }
   };
 
 export const queryClient = new QueryClient({
