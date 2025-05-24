@@ -1,10 +1,8 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import { createServer, Server } from "http";
-import path from 'path';  // ここを追加
-import { storage } from "./storage";
-// その他のインポート
-import type { Express, Request, Response } from "express";
-import { createServer, type Server } from "http";
+import path from 'path';  // 静的インポート
+import { fileURLToPath } from 'url';  // ファイルURLをパスに変換するために必要
+import { dirname } from 'path';  // ディレクトリ名を取得するために必要
 import { storage } from "./storage";
 import { 
   insertMaterialSchema, 
@@ -13,6 +11,10 @@ import {
   insertMaterialTypeSchema
 } from "@shared/schema";
 import { z } from "zod";
+
+// ESモジュールで__dirnameを使用するための設定
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all materials
@@ -339,7 +341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-   // 材質タイプを削除
+  // 材質タイプを削除
   app.delete("/api/material-types/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -360,14 +362,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "材質タイプの削除に失敗しました" });
     }
   });
+
   // クライアントサイドのルーティングをサポートするための設定
-  import path from 'path';
   app.get('*', (req, res) => {
     // APIのパスでなければindex.htmlを返す
     if (!req.path.startsWith('/api/')) {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     }
   });
+
   const httpServer = createServer(app);
   return httpServer;
 }
