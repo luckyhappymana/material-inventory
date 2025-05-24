@@ -53,25 +53,23 @@ async function main() {
   
   // 開発環境の場合はViteを設定
   if (process.env.NODE_ENV !== "production") {
-    await setupVite(app);
-  }
-  
-  // ルーティングの設定
-  try {
-    const httpServer = await registerRoutes(app);
-    
-    // サーバーのポート設定
-    const port = process.env.PORT || 3000;
-    httpServer.listen(port, () => {
-      log(`Server listening on port ${port}...`);
-    });
-    
-    return httpServer;
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    throw error;
+    const server = await registerRoutes(app);
+    await setupVite(app, server);
+    return server;
+  } else {
+    // 本番環境ではシンプルにルーティングを設定
+    return await registerRoutes(app);
   }
 }
 
 // メイン関数の実行
-main().catch(console.error);
+main().then(server => {
+  // サーバーのポート設定
+  const port = process.env.PORT || 3000;
+  server.listen(port, () => {
+    log(`Server listening on port ${port}...`);
+  });
+}).catch(error => {
+  console.error("Failed to start server:", error);
+  process.exit(1);
+});
