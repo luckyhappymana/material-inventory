@@ -359,3 +359,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
 }
+// クライアントサイドのルーティングをサポートするための設定
+// この部分を追加してください
+const path = require('path');
+app.get('*', (req, res) => {
+  // APIのパスでなければindex.htmlを返す
+  if (!req.path.startsWith('/api/')) {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  }
+});
