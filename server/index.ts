@@ -51,25 +51,26 @@ async function main() {
     databaseInitializing = false;
   }
   
-  // 開発環境の場合はViteを設定
+  // 本番環境または開発環境の設定
+  let server;
   if (process.env.NODE_ENV !== "production") {
-    const server = await registerRoutes(app);
+    server = await registerRoutes(app);
     await setupVite(app, server);
-    return server;
   } else {
-    // 本番環境ではシンプルにルーティングを設定
-    return await registerRoutes(app);
+    server = await registerRoutes(app);
   }
-}
-
-// メイン関数の実行
-main().then(server => {
+  
   // サーバーのポート設定
   const port = process.env.PORT || 3000;
   server.listen(port, () => {
     log(`Server listening on port ${port}...`);
   });
-}).catch(error => {
+  
+  return server;
+}
+
+// メイン関数の実行
+main().catch(error => {
   console.error("Failed to start server:", error);
   process.exit(1);
 });
