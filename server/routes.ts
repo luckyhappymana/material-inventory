@@ -356,7 +356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   // クライアントサイドのルーティングをサポートするための設定
-  const path = require('path');
+  import path from 'path';
   app.get('*', (req, res) => {
     // APIのパスでなければindex.htmlを返す
     if (!req.path.startsWith('/api/')) {
