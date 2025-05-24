@@ -32,9 +32,9 @@ export async function setupVite(app: Express, server: Server) {
 export function serveStatic(app: Express) {
   // 本番環境の場合は静的ファイルを提供
   if (process.env.NODE_ENV === "production") {
-    // 絶対パスで指定（Renderの環境に合わせる）
     const staticPath = '/opt/render/project/src/client/dist';
-    app.use(express.static(staticPath));
+    app.use('/assets', express.static(staticPath + '/assets'));
+    app.use('/favicon.ico', express.static(staticPath + '/favicon.ico'));
     log(`Serving static files from: ${staticPath}`);
   }
 }
