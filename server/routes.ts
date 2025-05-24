@@ -1,8 +1,5 @@
 import express, { Express, Request, Response, NextFunction } from "express";
 import { createServer, Server } from "http";
-import path from 'path';  // 静的インポート
-import { fileURLToPath } from 'url';  // ファイルURLをパスに変換するために必要
-import { dirname } from 'path';  // ディレクトリ名を取得するために必要
 import { storage } from "./storage";
 import { 
   insertMaterialSchema, 
@@ -11,10 +8,6 @@ import {
   insertMaterialTypeSchema
 } from "@shared/schema";
 import { z } from "zod";
-
-// ESモジュールで__dirnameを使用するための設定
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all materials
@@ -367,7 +360,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('*', (req, res) => {
     // APIのパスでなければindex.htmlを返す
     if (!req.path.startsWith('/api/')) {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+      // 本番環境のパスを直接指定
+      res.sendFile('/opt/render/project/src/client/dist/index.html');
     }
   });
 
