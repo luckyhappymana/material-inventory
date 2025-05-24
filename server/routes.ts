@@ -334,7 +334,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // 材質タイプを削除
+   // 材質タイプを削除
   app.delete("/api/material-types/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -356,15 +356,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // クライアントサイドのルーティングをサポートするための設定
+  const path = require('path');
+  app.get('*', (req, res) => {
+    // APIのパスでなければindex.htmlを返す
+    if (!req.path.startsWith('/api/')) {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
-// クライアントサイドのルーティングをサポートするための設定
-// この部分を追加してください
-const path = require('path');
-app.get('*', (req, res) => {
-  // APIのパスでなければindex.htmlを返す
-  if (!req.path.startsWith('/api/')) {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-  }
-});
