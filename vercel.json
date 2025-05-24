@@ -4,23 +4,15 @@
     {
       "src": "server/index.ts",
       "use": "@vercel/node"
-    },
-    {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server/index.ts"
-    },
-    {
       "src": "/(.*)",
-      "dest": "client/dist/$1"
+      "dest": "server/index.ts"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
