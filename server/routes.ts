@@ -355,14 +355,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // クライアントサイドのルーティングをサポートするためのAPIルート以外のリクエストへの対応
-  app.use((req, res, next) => {
-    if (req.path.startsWith('/api/')) {
-      next();
+  // APIルート以外のすべてのリクエストに対してindex.htmlを返す
+  app.get("*", (req, res) => {
+    if (!req.path.startsWith('/api/')) {
+      const htmlContent = `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>材料在庫管理システム</title>
+  <meta name="description" content="材料在庫管理システム - 材質タイプ、板厚、サイズ、枚数の管理">
+  <link rel="stylesheet" href="/assets/index.css">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/assets/index.js"></script>
+</body>
+</html>
+      `;
+      res.set('Content-Type', 'text/html');
+      res.send(htmlContent);
     } else {
-      // インデックスHTMLファイルのパスを直接ハードコード
-      const indexHtml = '/opt/render/project/src/client/dist/index.html';
-      res.sendFile(indexHtml);
+      res.status(404).json({ message: "API endpoint not found" });
     }
   });
 
