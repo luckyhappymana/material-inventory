@@ -355,13 +355,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // クライアントサイドのルーティングをサポートするためのAPIルート以外のリクエストをindex.htmlにリダイレクト
-  app.use((req, res, next) => {
-    if (req.path.startsWith('/api/')) {
-      next();
-    } else {
-      // パスモジュールを使わずに絶対パスを直接指定
-      res.sendFile('/opt/render/project/src/client/dist/index.html');
+  // クライアントサイドのルーティングをサポートするためのAPIルート以外のリクエストへの対応
+  app.get("*", (req, res) => {
+    // APIのルートでない場合は、HTMLファイルを返す
+    if (!req.path.startsWith("/api/")) {
+      // 本番環境では絶対パスを使用
+      res.sendFile("/opt/render/project/src/client/dist/index.html");
     }
   });
 
