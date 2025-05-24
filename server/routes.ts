@@ -1,3 +1,8 @@
+import express, { Express, Request, Response, NextFunction } from "express";
+import { createServer, Server } from "http";
+import path from 'path';  // ここを追加
+import { storage } from "./storage";
+// その他のインポート
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
