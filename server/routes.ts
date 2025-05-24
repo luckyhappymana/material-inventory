@@ -366,3 +366,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
 }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting material type:", error);
+      res.status(500).json({ message: "材質タイプの削除に失敗しました" });
+    }
+  });
+
+  // クライアントサイドのルーティングをサポートするための設定
+  const path = require('path');
+  app.get('*', (req, res) => {
+    // APIのパスでなければindex.htmlを返す
+    if (!req.path.startsWith('/api/')) {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
