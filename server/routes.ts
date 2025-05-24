@@ -1,10 +1,9 @@
-import express, { Express, Request, Response, NextFunction } from "express";
+import express, { Express, Request, Response } from "express";
 import { createServer, Server } from "http";
 import { storage } from "./storage";
 import { 
   insertMaterialSchema, 
   insertUsageHistorySchema,
-  materialTypeSchema,
   insertMaterialTypeSchema
 } from "@shared/schema";
 import { z } from "zod";
@@ -356,11 +355,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // クライアントサイドのルーティングをサポートするための設定
-  app.get('*', (req, res) => {
-    // APIのパスでなければindex.htmlを返す
-    if (!req.path.startsWith('/api/')) {
-      // 本番環境のパスを直接指定（pathモジュールを使用しない）
+  // クライアントサイドのルーティングをサポートするためのAPIルート以外のリクエストをindex.htmlにリダイレクト
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+      next();
+    } else {
+      // パスモジュールを使わずに絶対パスを直接指定
       res.sendFile('/opt/render/project/src/client/dist/index.html');
     }
   });
