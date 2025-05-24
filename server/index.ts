@@ -2,6 +2,9 @@ import express, { type Express, Request, Response, NextFunction } from 'express'
 import { registerRoutes } from './routes.js';
 import { log, setupVite } from './vite.js';
 import { storage } from './storage.js';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import { dirname, join } from 'path';
 
 async function main() {
   const app: Express = express();
@@ -12,15 +15,24 @@ async function main() {
   
   if (isProduction) {
     // 本番環境では静的ファイルを直接提供
-    log('Serving static files from: client/dist');
-    app.use(express.static('client/dist'));
+    // 正しいパスを指定
+    const staticPath = '../dist/public';
+    log(`Serving static files from: ${staticPath}`);
+    app.use(express.static(staticPath));
     
     // すべてのルートに対してindex.htmlを返す
+    const indexPath = join(staticPath, 'index.html');
     app.get('*', (req, res, next) => {
       if (req.path.startsWith('/api')) {
         return next();
       }
-      res.sendFile('client/dist/index.html', { root: '.' });
+      // ファイルが存在するか確認してから送信
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath, { root: '.' });
+      } else {
+        log(`Error: index.html not found at ${indexPath}`);
+        res.status(404).send('Index file not found');
+      }
     });
   } else {
     // 開発環境ではViteを使用
