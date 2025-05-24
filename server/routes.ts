@@ -356,11 +356,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // クライアントサイドのルーティングをサポートするためのAPIルート以外のリクエストへの対応
-  app.get("*", (req, res) => {
-    // APIのルートでない場合は、HTMLファイルを返す
-    if (!req.path.startsWith("/api/")) {
-      // 本番環境では絶対パスを使用
-      res.sendFile("/opt/render/project/src/client/dist/index.html");
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+      next();
+    } else {
+      // インデックスHTMLファイルのパスを直接ハードコード
+      const indexHtml = '/opt/render/project/src/client/dist/index.html';
+      res.sendFile(indexHtml);
     }
   });
 
