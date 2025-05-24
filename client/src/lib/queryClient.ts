@@ -36,7 +36,7 @@ export async function apiRequest(
   // API URLの設定（本番環境では絶対パスを使用）
   const API_BASE_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('replit')
     ? '' // 開発環境では相対パス
-    : 'https://material-inventory-glk2.onrender.com'; // 本番環境では絶対パス
+    : window.location.origin; // 本番環境では現在のオリジンを使用
   
   // URLの先頭にベースURLを追加
   const fullUrl = url.startsWith('/') ? `${API_BASE_URL}${url}` : url;
@@ -61,7 +61,7 @@ export const getQueryFn: <T>(options: {
     // API URLの設定（本番環境では絶対パスを使用）
     const API_BASE_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('replit')
       ? '' // 開発環境では相対パス
-      : 'https://material-inventory-glk2.onrender.com'; // 本番環境では絶対パス
+      : window.location.origin; // 本番環境では現在のオリジンを使用
     
     const urlKey = queryKey[0] as string;
     const fullUrl = urlKey.startsWith('/') ? `${API_BASE_URL}${urlKey}` : urlKey;
