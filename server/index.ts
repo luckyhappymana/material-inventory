@@ -2,9 +2,8 @@ import express, { type Express, Request, Response, NextFunction } from 'express'
 import { registerRoutes } from './routes.js';
 import { log, setupVite } from './vite.js';
 import { storage } from './storage.js';
-import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { dirname, join } from 'path';
+import path from 'path';
 
 async function main() {
   const app: Express = express();
@@ -15,23 +14,26 @@ async function main() {
   
   if (isProduction) {
     // 本番環境では静的ファイルを直接提供
-    // 正しいパスを指定
-    const staticPath = '../dist/public';
+    // Render環境での正しいパスを指定
+    const staticPath = 'dist/public';
     log(`Serving static files from: ${staticPath}`);
     app.use(express.static(staticPath));
     
     // すべてのルートに対してindex.htmlを返す
-    const indexPath = join(staticPath, 'index.html');
+    const indexPath = path.join(staticPath, 'index.html');
     app.get('*', (req, res, next) => {
       if (req.path.startsWith('/api')) {
         return next();
       }
+      
       // ファイルが存在するか確認してから送信
       if (fs.existsSync(indexPath)) {
-        res.sendFile(indexPath, { root: '.' });
+        log(`Serving index.html from: ${indexPath}`);
+        res.sendFile(indexPath, { root: process.cwd() });
       } else {
-        log(`Error: index.html not found at ${indexPath}`);
-        res.status(404).send('Index file not found');
+        const foundFiles = fs.readdirSync('dist').join(', ');
+        log(`Error: index.html not found at ${indexPath}. Files in dist: ${foundFiles}`);
+        res.status(404).send(`Index file not found at ${indexPath}`);
       }
     });
   } else {
