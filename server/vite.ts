@@ -1,4 +1,4 @@
-import { Express } from "express";
+import express, { Express } from "express";
 import { Server } from "http";
 
 export function log(message: string, source = "express") {
