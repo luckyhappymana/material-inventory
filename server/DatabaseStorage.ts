@@ -219,39 +219,53 @@ export class DatabaseStorage implements IStorage {
     return updatedMaterialType;
   }
 
-  async deleteMaterialType(id: number): Promise<boolean> {
-    // この材質タイプを使用している材料がないか確認
-    const [material] = await db.select()
-      .from(materials)
-      .where(eq(materials.materialType, (await this.getMaterialType(id))?.name || ""));
-
-    if (material) {
-      throw new Error("この材質タイプは使用中のため削除できません");
-    }
-
-    const [deletedType] = await db.delete(materialTypes)
-      .where(eq(materialTypes.id, id))
-      .returning({ id: materialTypes.id });
-    return !!deletedType;
+ async deleteMaterialType(id: number): Promise<boolean> {
+  // この材質タイプを使用している材料がないか確認
+  const [material] = await db.select()
+    .from(materials)
+    .where(eq(materials.materialType, (await this.getMaterialType(id))?.name || ""));
+  if (material) {
+    throw new Error("この材質タイプは使用中のため削除できません");
   }
-
-  // デフォルトの材質タイプを初期化
-  async initializeDefaultMaterialTypes() {
+  const [deletedType] = await db.delete(materialTypes)
+    .where(eq(materialTypes.id, id))
+    .returning({ id: materialTypes.id });
+  return !!deletedType;
+}
+// デフォルトの材質タイプを初期化
+async initializeDefaultMaterialTypes() {
+  try {
+    // まずテーブルが存在するか確認
+    try {
+      await db.query.materialTypes.findFirst();
+    } catch (error) {
+      // テーブルが存在しない場合は何もせずに終了
+      console.log("material_typesテーブルがまだ存在しないため、初期化をスキップします");
+      return;
+    }
+    
     // デフォルトの材質タイプがあるか確認
     const defaultTypes = [
-      { name: DefaultMaterialTypes.SPC, color: "#9C27B0" },
-      { name: DefaultMaterialTypes.SECC, color: "#2196F3" },
-      { name: DefaultMaterialTypes.SUS, color: "#4CAF50" },
-      { name: DefaultMaterialTypes.SUS_MIGAKI, color: "#FF9800" },
-      { name: DefaultMaterialTypes.SUS_HL, color: "#795548" },
-      { name: DefaultMaterialTypes.A5052, color: "#607D8B" },
+      { name: "SPC", color: "#9E9E9E" },
+      { name: "SECC", color: "#2196F3" },
+      { name: "SUS", color: "#673AB7" },
+      { name: "SUS-MIGAKI", color: "#FF9800" },
+      { name: "SUS-HL", color: "#795548" },
+      { name: "A5052", color: "#607D8B" },
     ];
-
+    
     for (const type of defaultTypes) {
-      const existingType = await this.getMaterialTypeByName(type.name);
-      if (!existingType) {
-        await db.insert(materialTypes).values(type);
+      try {
+        const existingType = await this.getMaterialTypeByName(type.name);
+        if (!existingType) {
+          await db.insert(materialTypes).values(type);
+        }
+      } catch (error) {
+        console.error(`材質タイプ「${type.name}」の追加中にエラーが発生しました:`, error);
       }
     }
+  } catch (error) {
+    console.error("デフォルト材質タイプの初期化中にエラーが発生しました:", error);
   }
 }
+}  
