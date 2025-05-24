@@ -360,7 +360,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('*', (req, res) => {
     // APIのパスでなければindex.htmlを返す
     if (!req.path.startsWith('/api/')) {
-      // 本番環境のパスを直接指定
+      // 本番環境のパスを直接指定（pathモジュールを使用しない）
       res.sendFile('/opt/render/project/src/client/dist/index.html');
     }
   });
