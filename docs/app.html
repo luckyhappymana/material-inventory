@@ -3,126 +3,665 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>材料在庫管理システム - 完全版</title>
+    <title>材料在庫管理システム</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5; color: #333; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-        .firebase-status { position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; z-index: 1000; }
-        .firebase-status.disconnected { background: #dc3545; }
-        .nav-container { background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .nav-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .nav-btn { padding: 12px 24px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-weight: 500; }
-        .nav-btn:hover { background: #e9ecef; }
-        .nav-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
-        .page { display: none; background: white; border-radius: 10px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .page.active { display: block; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid #e9ecef; flex-wrap: wrap; gap: 15px; }
-        .page-title { font-size: 24px; font-weight: 700; color: #2c3e50; }
-        .add-btn { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-        .add-btn:hover { transform: translateY(-2px); }
-        .search-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; }
-        .search-input, .search-select { padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px; }
-        .search-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 15px 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
-        th { background: #f8f9fa; font-weight: 700; color: #495057; }
-        .material-badge { padding: 6px 14px; border-radius: 25px; color: white; font-size: 13px; font-weight: 700; display: inline-block; }
-        .size-text { font-size: 18px; font-weight: 700; color: #2c3e50; }
-        .quantity-text { font-size: 22px; font-weight: 800; color: #e74c3c; }
-        .action-btn { padding: 8px 14px; margin: 2px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
-        .use-btn { background: #28a745; color: white; }
-        .edit-btn { background: #ffc107; color: #212529; }
-        .hide-btn { background: #6c757d; color: white; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background-color: white; margin: 5% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; position: relative; }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #666; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #495057; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px; }
-        .submit-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 14px 28px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; }
-        .cancel-btn { background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 10px; }
-        .color-palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 10px; }
-        .color-option { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
-        .color-option.selected { border-color: #333; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Firebase接続状態 */
+        .firebase-status {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .firebase-status.connected {
+            background: #dc3545;
+        }
+
+        /* ナビゲーションカード */
+        .nav-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .nav-card.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .nav-card.inventory {
+            background: #6366f1;
+            color: white;
+        }
+
+        .nav-card.materials {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .nav-card.stats {
+            background: #10b981;
+            color: white;
+        }
+
+        .nav-card .icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* ページヘッダー */
+        .page-header {
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .page-title .icon {
+            font-size: 28px;
+            margin-right: 12px;
+        }
+
+        .add-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .add-button:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        /* 検索エリア */
+        .search-section {
+            padding: 24px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            max-width: 400px;
+        }
+
+        .search-input, .search-select {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .search-input:focus, .search-select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .search-button:hover {
+            background: #4f46e5;
+        }
+
+        /* テーブル */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .materials-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .materials-table th {
+            background: #f9fafb;
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .materials-table td {
+            padding: 16px 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .materials-table tr:hover {
+            background: #f9fafb;
+        }
+
+        /* 材質バッジ */
+        .material-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* サイズと枚数のスタイル */
+        .size-text {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 16px;
+        }
+
+        .quantity-text {
+            font-weight: 800;
+            color: #dc2626;
+            font-size: 18px;
+        }
+
+        /* アクションボタン */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .use-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .use-btn:hover {
+            background: #059669;
+        }
+
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #d97706;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 24px 24px 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 4px;
+        }
+
+        .close-btn:hover {
+            color: #374151;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-footer {
+            padding: 0 24px 24px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #4b5563;
+        }
+
+        .btn-submit {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background: #4f46e5;
+        }
+
+        /* カラーパレット */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #1f2937;
+            transform: scale(1.15);
+        }
+
+        /* 統計カード */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #6366f1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        /* 空の状態 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* アニメーション */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .search-grid {
+                max-width: none;
+            }
+
+            .materials-table th,
+            .materials-table td {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+        }
+
+        /* ページ表示制御 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* ナビゲーション状態 */
+        .nav-card.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
-    <div id="firebase-status" class="firebase-status disconnected">Firebase接続中...</div>
-    
+    <!-- Firebase接続状態 -->
+    <div id="firebase-status" class="firebase-status">Firebase接続中...</div>
+
     <div class="container">
-        <div class="header">
-            <h1>🏭 材料在庫管理システム</h1>
-            <p>24時間稼働・完全版 | Firebase Firestore連携</p>
-        </div>
-
+        <!-- ナビゲーション -->
         <div class="nav-container">
-            <div class="nav-buttons">
-                <button id="inventory-btn" class="nav-btn active">📦 在庫一覧</button>
-                <button id="material-types-btn" class="nav-btn">🏷️ 材質管理</button>
-                <button id="stats-btn" class="nav-btn">📊 統計情報</button>
+            <div class="nav-card inventory active" id="nav-inventory">
+                <span class="icon">📦</span>在庫一覧
+            </div>
+            <div class="nav-card materials" id="nav-materials">
+                <span class="icon">🏷️</span>材質管理
+            </div>
+            <div class="nav-card stats" id="nav-stats">
+                <span class="icon">📊</span>統計情報
             </div>
         </div>
 
-        <!-- 在庫一覧ページ -->
-        <div id="inventory-page" class="page active">
-            <div class="page-header">
-                <h2 class="page-title">📦 在庫一覧</h2>
-                <button id="add-material-btn" class="add-btn">➕ 新規材料追加</button>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" id="search-query" class="search-input" placeholder="🔍 検索キーワード">
-                <select id="material-type-filter" class="search-select">
-                    <option value="">すべての材質</option>
-                </select>
-                <input type="number" id="width-filter" class="search-input" placeholder="幅 (mm)">
-                <input type="number" id="height-filter" class="search-input" placeholder="高さ (mm)">
-                <input type="text" id="thickness-filter" class="search-input" placeholder="板厚 (例: t1.0)">
-                <button id="search-btn" class="search-btn">🔍 検索</button>
-            </div>
-            
-            <table id="materials-table">
-                <thead>
-                    <tr><th>材質</th><th>板厚</th><th>サイズ (mm)</th><th>枚数</th><th>アクション</th><th>備考</th><th>作成日</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- 材質管理ページ -->
-        <div id="material-types-page" class="page">
-            <div class="page-header">
-                <h2 class="page-title">🏷️ 材質管理</h2>
-                <button id="add-material-type-btn" class="add-btn">➕ 新規材質追加</button>
-            </div>
-            <table id="material-types-table">
-                <thead>
-                    <tr><th>材質名</th><th>カラー</th><th>操作</th></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <!-- 統計情報ページ -->
-        <div id="stats-page" class="page">
-            <div class="page-header">
-                <h2 class="page-title">📊 統計情報</h2>
-            </div>
-            <div id="stats-content">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                    <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: 800; color: #667eea;" id="total-materials">0</div>
-                        <div style="font-size: 14px; color: #6c757d; font-weight: 600;">総材料数</div>
+        <div class="main-content">
+            <!-- 在庫一覧ページ -->
+            <div id="page-inventory" class="page active">
+                <div class="page-header">
+                    <div class="page-title">
+                        <span class="icon">📦</span>在庫一覧
                     </div>
-                    <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: 800; color: #667eea;" id="total-quantity">0</div>
-                        <div style="font-size: 14px; color: #6c757d; font-weight: 600;">総枚数</div>
+                    <button class="add-button" id="btn-add-material">
+                        <span>+</span>新規材料追加
+                    </button>
+                </div>
+
+                <div class="search-section">
+                    <div class="search-grid">
+                        <input type="text" class="search-input" id="search-keyword" placeholder="🔍 検索キーワード">
+                        <select class="search-select" id="search-material-type">
+                            <option value="">すべての材質</option>
+                        </select>
+                        <input type="number" class="search-input" id="search-width" placeholder="100" value="100">
+                        <input type="number" class="search-input" id="search-height" placeholder="100" value="100">
+                        <input type="text" class="search-input" id="search-thickness" placeholder="板厚 (例: t1.0)">
+                        <button class="search-button" id="btn-search">
+                            <span>🔍</span>検索
+                        </button>
                     </div>
-                    <div style="background: white; padding: 25px; border-radius: 15px; text-align: center;">
-                        <div style="font-size: 32px; font-weight: 800; color: #667eea;" id="material-types-count">0</div>
-                        <div style="font-size: 14px; color: #6c757d; font-weight: 600;">材質種類数</div>
+                </div>
+
+                <div class="table-container">
+                    <table class="materials-table">
+                        <thead>
+                            <tr>
+                                <th>材質</th>
+                                <th>板厚</th>
+                                <th>サイズ<br>(mm)</th>
+                                <th>枚数</th>
+                                <th>アクション</th>
+                                <th>備考</th>
+                                <th>作成日</th>
+                            </tr>
+                        </thead>
+                        <tbody id="materials-tbody">
+                            <!-- 材料データがここに挿入されます -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 材質管理ページ -->
+            <div id="page-materials" class="page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <span class="icon">🏷️</span>材質管理
+                    </div>
+                    <button class="add-button" id="btn-add-material-type">
+                        <span>+</span>新規材質追加
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="materials-table">
+                        <thead>
+                            <tr>
+                                <th>材質名</th>
+                                <th>カラー</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="material-types-tbody">
+                            <!-- 材質タイプデータがここに挿入されます -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 統計情報ページ -->
+            <div id="page-stats" class="page">
+                <div class="page-header">
+                    <div class="page-title">
+                        <span class="icon">📊</span>統計情報
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-total-materials">0</div>
+                        <div class="stat-label">総材料数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-total-quantity">0</div>
+                        <div class="stat-label">総枚数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-material-types">0</div>
+                        <div class="stat-label">材質種類数</div>
                     </div>
                 </div>
             </div>
@@ -130,76 +669,84 @@
     </div>
 
     <!-- 材料追加モーダル -->
-    <div id="add-material-modal" class="modal">
+    <div id="modal-add-material" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>➕ 新規材料追加</h3>
-            <form id="add-material-form">
-                <div class="form-group">
-                    <label>材質 *</label>
-                    <select id="material-type" required>
-                        <option value="">選択してください</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>板厚 *</label>
-                    <input type="text" id="thickness" placeholder="例: t1.0" required>
-                </div>
-                <div class="form-group">
-                    <label>幅 (mm) *</label>
-                    <input type="number" id="width-mm" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>高さ (mm) *</label>
-                    <input type="number" id="height-mm" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>枚数 *</label>
-                    <input type="number" id="quantity" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>備考</label>
-                    <textarea id="notes" rows="3" placeholder="任意の備考を入力"></textarea>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button type="button" id="cancel-add-material" class="cancel-btn">キャンセル</button>
-                    <button type="submit" class="submit-btn">追加</button>
-                </div>
-            </form>
+            <div class="modal-header">
+                <h3 class="modal-title">新規材料追加</h3>
+                <button class="close-btn" id="close-material-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-material">
+                    <div class="form-group">
+                        <label class="form-label">材質 *</label>
+                        <select class="form-select" id="input-material-type" required>
+                            <option value="">選択してください</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">板厚 *</label>
+                        <input type="text" class="form-input" id="input-thickness" placeholder="例: t1.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">幅 (mm) *</label>
+                        <input type="number" class="form-input" id="input-width" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">高さ (mm) *</label>
+                        <input type="number" class="form-input" id="input-height" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">枚数 *</label>
+                        <input type="number" class="form-input" id="input-quantity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">備考</label>
+                        <textarea class="form-textarea" id="input-notes" placeholder="任意の備考を入力"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="cancel-material">キャンセル</button>
+                <button type="submit" class="btn-submit" id="submit-material" form="form-add-material">追加</button>
+            </div>
         </div>
     </div>
 
     <!-- 材質タイプ追加モーダル -->
-    <div id="add-material-type-modal" class="modal">
+    <div id="modal-add-material-type" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>🏷️ 新規材質追加</h3>
-            <form id="add-material-type-form">
-                <div class="form-group">
-                    <label>材質名 *</label>
-                    <input type="text" id="material-type-name" required>
-                </div>
-                <div class="form-group">
-                    <label>カラー *</label>
-                    <input type="hidden" id="material-type-color" required>
-                    <div class="color-palette">
-                        <div class="color-option" data-color="#9C27B0" style="background-color: #9C27B0;"></div>
-                        <div class="color-option" data-color="#2196F3" style="background-color: #2196F3;"></div>
-                        <div class="color-option" data-color="#4CAF50" style="background-color: #4CAF50;"></div>
-                        <div class="color-option" data-color="#FF9800" style="background-color: #FF9800;"></div>
-                        <div class="color-option" data-color="#F44336" style="background-color: #F44336;"></div>
-                        <div class="color-option" data-color="#795548" style="background-color: #795548;"></div>
-                        <div class="color-option" data-color="#607D8B" style="background-color: #607D8B;"></div>
-                        <div class="color-option" data-color="#E91E63" style="background-color: #E91E63;"></div>
-                        <div class="color-option" data-color="#00BCD4" style="background-color: #00BCD4;"></div>
-                        <div class="color-option" data-color="#8BC34A" style="background-color: #8BC34A;"></div>
+            <div class="modal-header">
+                <h3 class="modal-title">新規材質追加</h3>
+                <button class="close-btn" id="close-material-type-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-add-material-type">
+                    <div class="form-group">
+                        <label class="form-label">材質名 *</label>
+                        <input type="text" class="form-input" id="input-material-type-name" required>
                     </div>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button type="button" id="cancel-add-material-type" class="cancel-btn">キャンセル</button>
-                    <button type="submit" class="submit-btn">追加</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label class="form-label">カラー *</label>
+                        <input type="hidden" id="input-material-type-color" required>
+                        <div class="color-palette">
+                            <div class="color-option" data-color="#9C27B0" style="background-color: #9C27B0;"></div>
+                            <div class="color-option" data-color="#2196F3" style="background-color: #2196F3;"></div>
+                            <div class="color-option" data-color="#4CAF50" style="background-color: #4CAF50;"></div>
+                            <div class="color-option" data-color="#FF9800" style="background-color: #FF9800;"></div>
+                            <div class="color-option" data-color="#F44336" style="background-color: #F44336;"></div>
+                            <div class="color-option" data-color="#795548" style="background-color: #795548;"></div>
+                            <div class="color-option" data-color="#607D8B" style="background-color: #607D8B;"></div>
+                            <div class="color-option" data-color="#E91E63" style="background-color: #E91E63;"></div>
+                            <div class="color-option" data-color="#00BCD4" style="background-color: #00BCD4;"></div>
+                            <div class="color-option" data-color="#8BC34A" style="background-color: #8BC34A;"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="cancel-material-type">キャンセル</button>
+                <button type="submit" class="btn-submit" id="submit-material-type" form="form-add-material-type">追加</button>
+            </div>
         </div>
     </div>
 
@@ -207,6 +754,7 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, updateDoc, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
+        // Firebase設定
         const firebaseConfig = {
             apiKey: "AIzaSyCXaIJGXOGqVHV3Z1xP9XzHzJyZFQGBB9U",
             authDomain: "material-inventory-system.firebaseapp.com",
@@ -219,15 +767,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Firebase接続状態を更新
         setTimeout(() => {
-            document.getElementById('firebase-status').textContent = 'Firebase接続済み';
-            document.getElementById('firebase-status').classList.remove('disconnected');
+            document.getElementById('firebase-status').textContent = 'Firebase接続中...';
+            document.getElementById('firebase-status').classList.add('connected');
         }, 1000);
 
+        // アプリケーション状態
         let materials = [];
         let materialTypes = [];
         let filteredMaterials = [];
+        let currentPage = 'inventory';
 
+        // 初期材質タイプ
         const defaultMaterialTypes = [
             { name: 'SPC', color: '#9C27B0' },
             { name: 'SECC', color: '#2196F3' },
@@ -236,6 +788,7 @@
             { name: 'A5052', color: '#607D8B' }
         ];
 
+        // 材料の取得
         async function loadMaterials() {
             try {
                 const querySnapshot = await getDocs(query(collection(db, 'materials'), orderBy('widthMm', 'desc'), orderBy('heightMm', 'desc')));
@@ -248,6 +801,7 @@
             }
         }
 
+        // 材質タイプの取得
         async function loadMaterialTypes() {
             try {
                 const querySnapshot = await getDocs(collection(db, 'materialTypes'));
@@ -261,37 +815,50 @@
                     return;
                 }
                 
-                updateMaterialTypeFilter();
+                updateMaterialTypeSelects();
                 renderMaterialTypes();
             } catch (error) {
                 console.error('材質タイプ取得エラー:', error);
             }
         }
 
+        // 材料の表示
         function renderMaterials() {
-            const tbody = document.querySelector('#materials-table tbody');
+            const tbody = document.getElementById('materials-tbody');
             tbody.innerHTML = '';
             
             if (filteredMaterials.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 60px;">📦 材料が見つかりません</td></tr>';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div class="empty-icon">📦</div>
+                            <div>材料が見つかりません</div>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
             
             filteredMaterials.forEach(material => {
-                const row = document.createElement('tr');
                 const materialType = materialTypes.find(t => t.id === material.materialTypeId);
                 const typeName = materialType ? materialType.name : '不明';
-                const typeColor = materialType ? materialType.color : '#666';
+                const typeColor = materialType ? materialType.color : '#6b7280';
                 const createdDate = material.createdAt ? new Date(material.createdAt).toLocaleDateString('ja-JP') : '';
                 
+                const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><span class="material-badge" style="background-color: ${typeColor}">${typeName}</span></td>
+                    <td>
+                        <span class="material-badge" style="background-color: ${typeColor}">${typeName}</span>
+                    </td>
                     <td>${material.thickness}</td>
                     <td class="size-text">${material.widthMm} × ${material.heightMm}</td>
                     <td class="quantity-text">${material.quantity}</td>
                     <td>
-                        <button class="action-btn use-btn" onclick="useMaterial('${material.id}', ${material.quantity})">使用</button>
-                        <button class="action-btn hide-btn" onclick="hideMaterial('${material.id}')">削除</button>
+                        <div class="action-buttons">
+                            <button class="action-btn use-btn" onclick="useMaterial('${material.id}', ${material.quantity})">使用</button>
+                            <button class="action-btn edit-btn" onclick="editMaterial('${material.id}')">編集</button>
+                            <button class="action-btn delete-btn" onclick="deleteMaterial('${material.id}')">削除</button>
+                        </div>
                     </td>
                     <td>${material.notes || ''}</td>
                     <td>${createdDate}</td>
@@ -300,47 +867,311 @@
             });
         }
 
+        // 材質タイプの表示
         function renderMaterialTypes() {
-            const tbody = document.querySelector('#material-types-table tbody');
+            const tbody = document.getElementById('material-types-tbody');
             tbody.innerHTML = '';
             
             materialTypes.forEach(type => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${type.name}</td>
-                    <td><span class="material-badge" style="background-color: ${type.color}">${type.color}</span></td>
+                    <td>
+                        <span class="material-badge" style="background-color: ${type.color}">${type.color}</span>
+                    </td>
                     <td>設定済み</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        function updateMaterialTypeFilter() {
-            const select = document.getElementById('material-type-filter');
-            const materialTypeSelect = document.getElementById('material-type');
+        // 材質タイプセレクトの更新
+        function updateMaterialTypeSelects() {
+            const selects = [
+                document.getElementById('search-material-type'),
+                document.getElementById('input-material-type')
+            ];
             
-            select.innerHTML = '<option value="">すべての材質</option>';
-            materialTypes.forEach(type => {
-                select.innerHTML += `<option value="${type.id}">${type.name}</option>`;
+            selects.forEach(select => {
+                if (select) {
+                    const isSearch = select.id === 'search-material-type';
+                    select.innerHTML = isSearch ? '<option value="">すべての材質</option>' : '<option value="">選択してください</option>';
+                    
+                    materialTypes.forEach(type => {
+                        select.innerHTML += `<option value="${type.id}">${type.name}</option>`;
+                    });
+                }
+            });
+        }
+
+        // 統計の更新
+        function updateStats() {
+            document.getElementById('stat-total-materials').textContent = materials.length;
+            document.getElementById('stat-total-quantity').textContent = materials.reduce((sum, m) => sum + m.quantity, 0);
+            document.getElementById('stat-material-types').textContent = materialTypes.length;
+        }
+
+        // 検索・フィルター
+        function filterMaterials() {
+            const keyword = document.getElementById('search-keyword').value.toLowerCase();
+            const typeFilter = document.getElementById('search-material-type').value;
+            const widthFilter = document.getElementById('search-width').value;
+            const heightFilter = document.getElementById('search-height').value;
+            const thicknessFilter = document.getElementById('search-thickness').value.toLowerCase();
+            
+            filteredMaterials = materials.filter(material => {
+                const materialType = materialTypes.find(t => t.id === material.materialTypeId);
+                const typeName = materialType ? materialType.name.toLowerCase() : '';
+                
+                return (
+                    (!keyword || typeName.includes(keyword) || material.thickness.toLowerCase().includes(keyword) || (material.notes && material.notes.toLowerCase().includes(keyword))) &&
+                    (!typeFilter || material.materialTypeId === typeFilter) &&
+                    (!widthFilter || material.widthMm === parseInt(widthFilter)) &&
+                    (!heightFilter || material.heightMm === parseInt(heightFilter)) &&
+                    (!thicknessFilter || material.thickness.toLowerCase().includes(thicknessFilter))
+                );
             });
             
-            if (materialTypeSelect) {
-                materialTypeSelect.innerHTML = '<option value="">選択してください</option>';
-                materialTypes.forEach(type => {
-                    materialTypeSelect.innerHTML += `<option value="${type.id}">${type.name}</option>`;
-                });
+            renderMaterials();
+        }
+
+        // 材料追加
+        async function addMaterial(materialData) {
+            try {
+                // 重複チェック
+                const existing = materials.find(m => 
+                    m.materialTypeId === materialData.materialTypeId &&
+                    m.thickness === materialData.thickness &&
+                    m.widthMm === materialData.widthMm &&
+                    m.heightMm === materialData.heightMm
+                );
+                
+                if (existing) {
+                    if (confirm('同じ材質・板厚・サイズの材料が既に存在します。枚数を追加しますか？')) {
+                        await updateDoc(doc(db, 'materials', existing.id), {
+                            quantity: existing.quantity + materialData.quantity
+                        });
+                        alert('枚数を追加しました');
+                    }
+                } else {
+                    await addDoc(collection(db, 'materials'), {
+                        ...materialData,
+                        createdAt: new Date().toISOString()
+                    });
+                    alert('材料を追加しました');
+                }
+                
+                await loadMaterials();
+                closeModal('modal-add-material');
+            } catch (error) {
+                console.error('材料追加エラー:', error);
+                alert('材料追加に失敗しました');
             }
         }
 
-        function updateStats() {
-            document.getElementById('total-materials').textContent = materials.length;
-            document.getElementById('total-quantity').textContent = materials.reduce((sum, m) => sum + m.quantity, 0);
-            document.getElementById('material-types-count').textContent = materialTypes.length;
+        // 材質タイプ追加
+        async function addMaterialType(typeData) {
+            try {
+                const existingName = materialTypes.find(t => t.name === typeData.name);
+                const existingColor = materialTypes.find(t => t.color === typeData.color);
+                
+                if (existingName) {
+                    alert('同じ名前の材質が既に存在します');
+                    return;
+                }
+                
+                if (existingColor) {
+                    alert('同じ色の材質が既に存在します');
+                    return;
+                }
+                
+                await addDoc(collection(db, 'materialTypes'), typeData);
+                await loadMaterialTypes();
+                closeModal('modal-add-material-type');
+                alert('材質タイプを追加しました');
+            } catch (error) {
+                console.error('材質タイプ追加エラー:', error);
+                alert('材質タイプ追加に失敗しました');
+            }
         }
 
-        function filterMaterials() {
-            const query = document.getElementById('search-query').value.toLowerCase();
-            const typeFilter = document.getElementById('material-type-filter').value;
-            const widthFilter = document.getElementById('width-filter').value;
-            const heightFilter = document.getElementById('height-filter').value;
-            const thic
+        // 材料使用
+        window.useMaterial = async function(materialId, currentQuantity) {
+            const quantity = parseInt(prompt('使用枚数を入力してください:', '1'));
+            if (!quantity || quantity <= 0 || quantity > currentQuantity) {
+                alert('正しい枚数を入力してください');
+                return;
+            }
+            
+            try {
+                const newQuantity = currentQuantity - quantity;
+                if (newQuantity === 0) {
+                    await deleteDoc(doc(db, 'materials', materialId));
+                    alert('材料を使い切りました');
+                } else {
+                    await updateDoc(doc(db, 'materials', materialId), {
+                        quantity: newQuantity
+                    });
+                    alert(`${quantity}枚使用しました`);
+                }
+                await loadMaterials();
+            } catch (error) {
+                console.error('材料使用エラー:', error);
+                alert('材料使用に失敗しました');
+            }
+        };
+
+        // 材料編集（簡単な実装）
+        window.editMaterial = function(materialId) {
+            alert('編集機能は準備中です');
+        };
+
+        // 材料削除
+        window.deleteMaterial = async function(materialId) {
+            if (confirm('この材料を削除しますか？')) {
+                try {
+                    await deleteDoc(doc(db, 'materials', materialId));
+                    await loadMaterials();
+                    alert('材料を削除しました');
+                } catch (error) {
+                    console.error('材料削除エラー:', error);
+                    alert('材料削除に失敗しました');
+                }
+            }
+        };
+
+        // ページ切り替え
+        function showPage(pageId) {
+            // ナビゲーションの状態を更新
+            document.querySelectorAll('.nav-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            
+            // 新しいページを表示
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            
+            currentPage = pageId;
+            
+            // ページ固有の処理
+            if (pageId === 'inventory') {
+                loadMaterials();
+            } else if (pageId === 'materials') {
+                loadMaterialTypes();
+            } else if (pageId === 'stats') {
+                updateStats();
+            }
+        }
+
+        // モーダル表示
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            
+            if (modalId === 'modal-add-material') {
+                updateMaterialTypeSelects();
+                setTimeout(() => document.getElementById('input-material-type').focus(), 100);
+            } else if (modalId === 'modal-add-material-type') {
+                setTimeout(() => document.getElementById('input-material-type-name').focus(), 100);
+            }
+        }
+
+        // モーダル閉じる
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            
+            // フォームリセット
+            if (modalId === 'modal-add-material') {
+                document.getElementById('form-add-material').reset();
+            } else if (modalId === 'modal-add-material-type') {
+                document.getElementById('form-add-material-type').reset();
+                document.getElementById('input-material-type-color').value = '';
+                document.querySelectorAll('.color-option').forEach(option => option.classList.remove('selected'));
+            }
+        }
+
+        // イベントリスナー
+        document.addEventListener('DOMContentLoaded', function() {
+            // ナビゲーション
+            document.getElementById('nav-inventory').addEventListener('click', () => showPage('inventory'));
+            document.getElementById('nav-materials').addEventListener('click', () => showPage('materials'));
+            document.getElementById('nav-stats').addEventListener('click', () => showPage('stats'));
+            
+            // モーダル表示
+            document.getElementById('btn-add-material').addEventListener('click', () => showModal('modal-add-material'));
+            document.getElementById('btn-add-material-type').addEventListener('click', () => showModal('modal-add-material-type'));
+            
+            // モーダル閉じる
+            document.getElementById('close-material-modal').addEventListener('click', () => closeModal('modal-add-material'));
+            document.getElementById('close-material-type-modal').addEventListener('click', () => closeModal('modal-add-material-type'));
+            document.getElementById('cancel-material').addEventListener('click', () => closeModal('modal-add-material'));
+            document.getElementById('cancel-material-type').addEventListener('click', () => closeModal('modal-add-material-type'));
+            
+            // モーダル背景クリック
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+            
+            // 検索
+            document.getElementById('btn-search').addEventListener('click', filterMaterials);
+            document.getElementById('search-keyword').addEventListener('input', filterMaterials);
+            document.getElementById('search-material-type').addEventListener('change', filterMaterials);
+            document.getElementById('search-width').addEventListener('input', filterMaterials);
+            document.getElementById('search-height').addEventListener('input', filterMaterials);
+            document.getElementById('search-thickness').addEventListener('input', filterMaterials);
+            
+            // フォーム送信
+            document.getElementById('form-add-material').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    materialTypeId: document.getElementById('input-material-type').value,
+                    thickness: document.getElementById('input-thickness').value,
+                    widthMm: parseInt(document.getElementById('input-width').value),
+                    heightMm: parseInt(document.getElementById('input-height').value),
+                    quantity: parseInt(document.getElementById('input-quantity').value),
+                    notes: document.getElementById('input-notes').value
+                };
+                
+                addMaterial(formData);
+            });
+            
+            document.getElementById('form-add-material-type').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const color = document.getElementById('input-material-type-color').value;
+                if (!color) {
+                    alert('カラーを選択してください');
+                    return;
+                }
+                
+                const formData = {
+                    name: document.getElementById('input-material-type-name').value,
+                    color: color
+                };
+                
+                addMaterialType(formData);
+            });
+            
+            // カラーパレット
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    document.getElementById('input-material-type-color').value = option.dataset.color;
+                });
+            });
+        });
+
+        // 初期化
+        async function init() {
+            await loadMaterialTypes();
+            await loadMaterials();
+        }
+
+        init();
+    </script>
+</body>
+</html>
