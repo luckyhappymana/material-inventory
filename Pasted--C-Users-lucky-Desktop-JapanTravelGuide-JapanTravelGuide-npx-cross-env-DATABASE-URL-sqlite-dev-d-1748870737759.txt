@@ -1,0 +1,72 @@
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development tsx server/index.ts
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen ENOTSUP: operation not supported on socket 0.0.0.0:5000
+    at Server.setupListenHandle [as _listen2] (node:net:1917:21)
+    at listenInCluster (node:net:1996:12)
+    at node:net:2205:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1975:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'ENOTSUP',
+  errno: -4049,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5000
+}
+
+Node.js v22.16.0
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development PORT=3000 tsx server/index.ts
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen ENOTSUP: operation not supported on socket 0.0.0.0:5000
+    at Server.setupListenHandle [as _listen2] (node:net:1917:21)
+    at listenInCluster (node:net:1996:12)
+    at node:net:2205:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1975:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'ENOTSUP',
+  errno: -4049,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5000
+}
+
+Node.js v22.16.0
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development PORT=8080 tsx server/index.ts
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen ENOTSUP: operation not supported on socket 0.0.0.0:5000
+    at Server.setupListenHandle [as _listen2] (node:net:1917:21)
+    at listenInCluster (node:net:1996:12)
+    at node:net:2205:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1975:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'ENOTSUP',
+  errno: -4049,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5000
+}
+
+Node.js v22.16.0
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>netstat -an | findstr :5000
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>netstat -an | findstr :3000
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>

@@ -1,0 +1,33 @@
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development tsx server/index.ts
+12:09:47 AM [express] serving on 127.0.0.1:3000
+Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+12:10:04 AM [express] GET /api/material-types 200 in 5ms :: []
+12:10:04 AM [express] GET /api/materials 200 in 4ms :: []
+Material type creation error: SqliteError: no such function: now
+    at Database.prepare (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\better-sqlite3\lib\methods\wrappers.js:5:21)
+    at BetterSQLiteSession.prepareQuery (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\better-sqlite3\session.ts:50:28)
+    at BetterSQLiteSession.prepareOneTimeQuery (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\session.ts:135:15)
+    at QueryPromise._prepare (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:379:78)
+    at QueryPromise.all (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:396:15)
+    at QueryPromise.execute (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:408:40)
+    at QueryPromise.then (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\query-promise.ts:31:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'SQLITE_ERROR'
+}
+12:10:10 AM [express] POST /api/material-types 500 in 8ms :: {"message":"Failed to create material ty…
+12:12:22 AM [express] GET /api/material-types 200 in 4ms :: []
+12:12:22 AM [express] GET /api/materials 200 in 3ms :: []
+Material type creation error: SqliteError: no such function: now
+    at Database.prepare (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\better-sqlite3\lib\methods\wrappers.js:5:21)
+    at BetterSQLiteSession.prepareQuery (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\better-sqlite3\session.ts:50:28)
+    at BetterSQLiteSession.prepareOneTimeQuery (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\session.ts:135:15)
+    at QueryPromise._prepare (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:379:78)
+    at QueryPromise.all (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:396:15)
+    at QueryPromise.execute (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\sqlite-core\query-builders\insert.ts:408:40)
+    at QueryPromise.then (C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\node_modules\src\query-promise.ts:31:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'SQLITE_ERROR'
+}
+12:12:31 AM [express] POST /api/material-types 500 in 6ms :: {"message":"Failed to create material ty…

@@ -1,0 +1,7 @@
+Update website deployment configuration to use a more persistent host
+
+Refactor hosting configuration to ensure continued operation after Replit is discontinued.
+
+Replit-Commit-Author: Agent
+Replit-Commit-Session-Id: 90e44d22-7de9-494b-8202-2ff81fd626ad
+Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/707f1d72-893a-47d1-83d7-d3141b487696/2d710e87-4f36-4691-9867-dd1737d4d7d5.jpg

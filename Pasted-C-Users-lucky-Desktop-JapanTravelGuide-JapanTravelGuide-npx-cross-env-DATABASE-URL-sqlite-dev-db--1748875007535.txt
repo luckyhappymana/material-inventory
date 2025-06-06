@@ -1,0 +1,77 @@
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development tsx server/index.ts
+
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'better-sqlite3' imported from C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide\server\db.ts
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:256:9)
+    at packageResolve (node:internal/modules/esm/resolve:768:81)
+    at moduleResolve (node:internal/modules/esm/resolve:854:18)
+    at defaultResolve (node:internal/modules/esm/resolve:984:11)
+    at nextResolve (node:internal/modules/esm/hooks:748:28)
+    at resolveBase (file:///C:/Users/lucky/Desktop/JapanTravelGuide/JapanTravelGuide/node_modules/tsx/dist/esm/index.mjs?1748874974643:2:3212)
+    at resolveDirectory (file:///C:/Users/lucky/Desktop/JapanTravelGuide/JapanTravelGuide/node_modules/tsx/dist/esm/index.mjs?1748874974643:2:3584)
+    at resolveTsPaths (file:///C:/Users/lucky/Desktop/JapanTravelGuide/JapanTravelGuide/node_modules/tsx/dist/esm/index.mjs?1748874974643:2:4073)
+    at async resolve (file:///C:/Users/lucky/Desktop/JapanTravelGuide/JapanTravelGuide/node_modules/tsx/dist/esm/index.mjs?1748874974643:2:4441)
+    at async nextResolve (node:internal/modules/esm/hooks:748:22) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v22.16.0
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>type server\db.ts
+import Database from 'better-sqlite3';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { existsSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
+import * as schema from "@shared/schema";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error(
+    "DATABASE_URL must be set. Did you forget to provision a database?",
+  );
+}
+
+// Extract file path from DATABASE_URL (sqlite:./dev.db -> ./dev.db)
+let dbPath = process.env.DATABASE_URL.replace('sqlite:', '');
+
+// Ensure the database directory exists
+const dbDir = dirname(dbPath);
+if (!existsSync(dbDir)) {
+  mkdirSync(dbDir, { recursive: true });
+}
+
+const sqlite = new Database(dbPath);
+
+// Create tables if they don't exist
+sqlite.exec(`
+  CREATE TABLE IF NOT EXISTS material_types (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    color TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS materials (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    material_type_id INTEGER NOT NULL,
+    thickness REAL NOT NULL,
+    width INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS stock_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    material_id INTEGER NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('in', 'out')),
+    quantity INTEGER NOT NULL,
+    note TEXT,
+    created_at INTEGER NOT NULL
+  );
+`);
+
+export const db = drizzle(sqlite, { schema });
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>

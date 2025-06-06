@@ -1,0 +1,60 @@
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npm install
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 479 packages, and audited 480 packages in 17s
+
+63 packages are looking for funding
+  run `npm fund` for details
+
+7 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>dir
+ ドライブ C のボリューム ラベルがありません。
+ ボリューム シリアル番号は D001-C923 です
+
+ C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide のディレクトリ
+
+2025/06/02  23:07    <DIR>          .
+2025/06/02  21:39    <DIR>          ..
+2025/06/02  22:21                31 .env
+2025/06/02  20:55    <DIR>          .git
+2025/06/02  20:55                67 .gitignore
+2025/06/02  20:55               676 .replit
+2025/06/02  20:55    <DIR>          attached_assets
+2025/06/02  20:55    <DIR>          client
+2025/06/02  20:55               459 components.json
+2025/06/02  20:55               325 drizzle.config.ts
+2025/06/02  20:55           551,446 generated-icon.png
+2025/06/02  22:26                 0 netstat
+2025/06/02  23:07    <DIR>          node_modules
+2025/06/02  22:26                 0 npx
+2025/06/02  23:07           320,973 package-lock.json
+2025/06/02  22:21             3,562 package.json
+2025/06/02  20:55                80 postcss.config.js
+2025/06/02  20:55    <DIR>          server
+2025/06/02  20:55    <DIR>          shared
+2025/06/02  20:55             2,787 tailwind.config.ts
+2025/06/02  20:55               657 tsconfig.json
+2025/06/02  22:26                 0 type
+2025/06/02  20:55               894 vite.config.ts
+              15 個のファイル             881,957 バイト
+               8 個のディレクトリ  138,911,617,024 バイトの空き領域
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npm run dev
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+'NODE_ENV' は、内部コマンドまたは外部コマンド、
+操作可能なプログラムまたはバッチ ファイルとして認識されていません。
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>

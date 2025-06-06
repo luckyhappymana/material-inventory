@@ -1,0 +1,72 @@
+Failed to load resource: the server responded with a status of 404 ()Understand this error
+/api/materials?:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 ()Understand this error
+material-inventory-11eb1.web.app/:1 Access to fetch at 'https://us-central1-undefined.cloudfunctions.net/api/api/material-types' from origin 'https://material-inventory-11eb1.web.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+index-CEZfHbfu.js:48 
+            
+            
+           GET https://us-central1-undefined.cloudfunctions.net/api/api/material-types net::ERR_FAILED 404 (Not Found)
+(anonymous) @ index-CEZfHbfu.js:48
+i @ index-CEZfHbfu.js:48
+w @ index-CEZfHbfu.js:48
+start @ index-CEZfHbfu.js:48
+fetch @ index-CEZfHbfu.js:48
+Do @ index-CEZfHbfu.js:48
+onSubscribe @ index-CEZfHbfu.js:48
+subscribe @ index-CEZfHbfu.js:48
+(anonymous) @ index-CEZfHbfu.js:48
+C0 @ index-CEZfHbfu.js:38
+Fu @ index-CEZfHbfu.js:40
+Ci @ index-CEZfHbfu.js:40
+ZN @ index-CEZfHbfu.js:40
+gs @ index-CEZfHbfu.js:40
+Xm @ index-CEZfHbfu.js:40
+ds @ index-CEZfHbfu.js:38
+(anonymous) @ index-CEZfHbfu.js:40Understand this error
+index-CEZfHbfu.js:222 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-CEZfHbfu.js:222
+Fu @ index-CEZfHbfu.js:40
+Ci @ index-CEZfHbfu.js:40
+ZN @ index-CEZfHbfu.js:40
+gs @ index-CEZfHbfu.js:40
+Xm @ index-CEZfHbfu.js:40
+ds @ index-CEZfHbfu.js:38
+(anonymous) @ index-CEZfHbfu.js:40Understand this warning
+material-inventory-11eb1.web.app/:1 Access to fetch at 'https://us-central1-undefined.cloudfunctions.net/api/api/material-types' from origin 'https://material-inventory-11eb1.web.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+index-CEZfHbfu.js:48 
+            
+            
+           POST https://us-central1-undefined.cloudfunctions.net/api/api/material-types net::ERR_FAILED
+fr @ index-CEZfHbfu.js:48
+mutationFn @ index-CEZfHbfu.js:228
+fn @ index-CEZfHbfu.js:48
+w @ index-CEZfHbfu.js:48
+start @ index-CEZfHbfu.js:48
+execute @ index-CEZfHbfu.js:48
+await in execute
+mutate @ index-CEZfHbfu.js:48
+v @ index-CEZfHbfu.js:228
+(anonymous) @ index-CEZfHbfu.js:228
+await in (anonymous)
+mE @ index-CEZfHbfu.js:37
+yE @ index-CEZfHbfu.js:37
+vE @ index-CEZfHbfu.js:37
+Sm @ index-CEZfHbfu.js:37
+l0 @ index-CEZfHbfu.js:37
+(anonymous) @ index-CEZfHbfu.js:37
+Ap @ index-CEZfHbfu.js:40
+Ax @ index-CEZfHbfu.js:37
+Dc @ index-CEZfHbfu.js:37
+op @ index-CEZfHbfu.js:37
+OE @ index-CEZfHbfu.js:37Understand this error
+index-CEZfHbfu.js:228 Material type creation/update error: TypeError: Failed to fetch
+    at fr (index-CEZfHbfu.js:48:42875)
+    at Object.mutationFn (index-CEZfHbfu.js:228:114382)
+    at Object.fn (index-CEZfHbfu.js:48:19522)
+    at w (index-CEZfHbfu.js:48:9963)
+    at Object.start (index-CEZfHbfu.js:48:10422)
+    at _y.execute (index-CEZfHbfu.js:48:20327)
+    at async v (index-CEZfHbfu.js:228:115089)
+    at async index-CEZfHbfu.js:228:22923

@@ -1,0 +1,177 @@
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>type server\routes.ts
+import type { Express } from "express";
+import { createServer, type Server } from "http";
+import { storage } from "./storage";
+import {
+  insertMaterialSchema,
+  insertMaterialTypeSchema,
+  stockAdjustmentSchema
+} from "@shared/schema";
+import { z } from "zod";
+
+export async function registerRoutes(app: Express): Promise<Server> {
+  // Material routes
+  app.get("/api/materials", async (req, res) => {
+    try {
+      const filters = {
+        materialTypeId: req.query.materialTypeId ? Number(req.query.materialTypeId) : undefined,
+        thickness: req.query.thickness ? Number(req.query.thickness) : undefined,
+        minWidth: req.query.minWidth ? Number(req.query.minWidth) : undefined,
+        minHeight: req.query.minHeight ? Number(req.query.minHeight) : undefined,
+        search: req.query.search as string,
+      };
+
+      const materials = await storage.getMaterials(filters);
+      res.json(materials);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch materials" });
+    }
+  });
+
+  app.get("/api/materials/:id", async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const material = await storage.getMaterial(id);
+
+      if (!material) {
+        return res.status(404).json({ message: "Material not found" });
+      }
+
+      res.json(material);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch material" });
+    }
+  });
+
+  app.post("/api/materials", async (req, res) => {
+    try {
+      const materialData = insertMaterialSchema.parse(req.body);
+      const material = await storage.createMaterial(materialData);
+      res.status(201).json(material);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid material data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create material" });
+    }
+  });
+
+  app.put("/api/materials/:id", async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const materialData = insertMaterialSchema.partial().parse(req.body);
+      const material = await storage.updateMaterial(id, materialData);
+      res.json(material);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid material data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update material" });
+    }
+  });
+
+  app.delete("/api/materials/:id", async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      await storage.deleteMaterial(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete material" });
+    }
+  });
+
+  // Material type routes
+  app.get("/api/material-types", async (req, res) => {
+    try {
+      const materialTypes = await storage.getMaterialTypes();
+      res.json(materialTypes);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch material types" });
+    }
+  });
+
+  app.post("/api/material-types", async (req, res) => {
+    try {
+      const materialTypeData = insertMaterialTypeSchema.parse(req.body);
+      const materialType = await storage.createMaterialType(materialTypeData);
+      res.status(201).json(materialType);
+    } catch (error) {
+      console.error("Material type creation error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid material type data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create material type", error: error.message });
+    }
+  });
+
+  app.put("/api/material-types/:id", async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const materialTypeData = insertMaterialTypeSchema.partial().parse(req.body);
+      const materialType = await storage.updateMaterialType(id, materialTypeData);
+      res.json(materialType);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid material type data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update material type" });
+    }
+  });
+
+  app.delete("/api/material-types/:id", async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      await storage.deleteMaterialType(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete material type" });
+    }
+  });
+
+  // Stock adjustment routes
+  app.post("/api/materials/:id/adjust-stock", async (req, res) => {
+    try {
+      const materialId = Number(req.params.id);
+      const adjustmentData = stockAdjustmentSchema.parse({
+        ...req.body,
+        materialId,
+      });
+
+      const material = await storage.adjustStock(adjustmentData);
+      res.json(material);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid adjustment data", errors: error.errors });
+      }
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      res.status(500).json({ message: "Failed to adjust stock" });
+    }
+  });
+
+  app.get("/api/stock-transactions", async (req, res) => {
+    try {
+      const materialId = req.query.materialId ? Number(req.query.materialId) : undefined;
+      const transactions = await storage.getStockTransactions(materialId);
+      res.json(transactions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch stock transactions" });
+    }
+  });
+
+  // Statistics route
+  app.get("/api/stats", async (req, res) => {
+    try {
+      const stats = await storage.getStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch statistics" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>

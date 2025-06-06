@@ -1,0 +1,152 @@
+C:\Users\lucky\Desktop\JapanTravelGuide\JapanTravelGuide>npx cross-env DATABASE_URL=sqlite:./dev.db NODE_ENV=development tsx server/index.ts
+11:27:12 PM [express] serving on 127.0.0.1:3000
+Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+11:28:05 PM [express] GET /api/material-types 500 in 75ms :: {"message":"Failed to fetch material typ…
+11:28:05 PM [express] GET /api/materials 500 in 27ms :: {"message":"Failed to fetch materials"}
+11:28:23 PM [express] GET /api/material-types 500 in 27ms :: {"message":"Failed to fetch material typ…
+11:28:23 PM [express] GET /api/materials 500 in 27ms :: {"message":"Failed to fetch materials"}
+11:28:29 PM [express] GET /api/stats 500 in 25ms :: {"message":"Failed to fetch statistics"}
+11:28:29 PM [express] GET /api/material-types 500 in 24ms :: {"message":"Failed to fetch material typ…
+11:28:30 PM [express] GET /api/material-types 500 in 2ms :: {"message":"Failed to fetch material type…
+11:29:29 PM [express] GET /api/stats 500 in 42ms :: {"message":"Failed to fetch statistics"}
+11:29:29 PM [express] GET /api/material-types 500 in 46ms :: {"message":"Failed to fetch material typ…
+11:29:30 PM [express] GET /api/material-types 500 in 3ms :: {"message":"Failed to fetch material type…
+11:29:32 PM [express] GET /api/material-types 500 in 3ms :: {"message":"Failed to fetch material type…
+11:29:32 PM [express] GET /api/materials 500 in 3ms :: {"message":"Failed to fetch materials"}
+11:29:33 PM [express] GET /api/material-types 500 in 13ms :: {"message":"Failed to fetch material typ…
+11:29:33 PM [express] GET /api/materials 500 in 18ms :: {"message":"Failed to fetch materials"}
+11:30:33 PM [express] GET /api/material-types 500 in 14ms :: {"message":"Failed to fetch material typ…
+Material type creation error: ErrorEvent {
+  [Symbol(kTarget)]: WebSocket {
+    _events: [Object: null prototype] {
+      error: [Function],
+      message: [Function],
+      close: [Function],
+      open: [Function]
+    },
+    _eventsCount: 4,
+    _maxListeners: undefined,
+    _binaryType: 'arraybuffer',
+    _closeCode: 1006,
+    _closeFrameReceived: false,
+    _closeFrameSent: false,
+    _closeMessage: <Buffer >,
+    _closeTimer: null,
+    _errorEmitted: true,
+    _extensions: {},
+    _paused: false,
+    _protocol: '',
+    _readyState: 3,
+    _receiver: null,
+    _sender: null,
+    _socket: null,
+    _bufferedAmount: 0,
+    _isServer: false,
+    _redirects: 0,
+    _autoPong: true,
+    _url: 'wss://./v2',
+    _req: null,
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false
+  },
+  [Symbol(kType)]: 'error',
+  [Symbol(kError)]: Error: getaddrinfo ENOTFOUND .
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: '.'
+  },
+  [Symbol(kMessage)]: 'getaddrinfo ENOTFOUND .'
+}
+11:30:39 PM [express] POST /api/material-types 500 in 22ms :: {"message":"Failed to create material t…
+Material type creation error: ErrorEvent {
+  [Symbol(kTarget)]: WebSocket {
+    _events: [Object: null prototype] {
+      error: [Function],
+      message: [Function],
+      close: [Function],
+      open: [Function]
+    },
+    _eventsCount: 4,
+    _maxListeners: undefined,
+    _binaryType: 'arraybuffer',
+    _closeCode: 1006,
+    _closeFrameReceived: false,
+    _closeFrameSent: false,
+    _closeMessage: <Buffer >,
+    _closeTimer: null,
+    _errorEmitted: true,
+    _extensions: {},
+    _paused: false,
+    _protocol: '',
+    _readyState: 3,
+    _receiver: null,
+    _sender: null,
+    _socket: null,
+    _bufferedAmount: 0,
+    _isServer: false,
+    _redirects: 0,
+    _autoPong: true,
+    _url: 'wss://./v2',
+    _req: null,
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false
+  },
+  [Symbol(kType)]: 'error',
+  [Symbol(kError)]: Error: getaddrinfo ENOTFOUND .
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: '.'
+  },
+  [Symbol(kMessage)]: 'getaddrinfo ENOTFOUND .'
+}
+11:30:40 PM [express] POST /api/material-types 500 in 10ms :: {"message":"Failed to create material t…
+Material type creation error: ErrorEvent {
+  [Symbol(kTarget)]: WebSocket {
+    _events: [Object: null prototype] {
+      error: [Function],
+      message: [Function],
+      close: [Function],
+      open: [Function]
+    },
+    _eventsCount: 4,
+    _maxListeners: undefined,
+    _binaryType: 'arraybuffer',
+    _closeCode: 1006,
+    _closeFrameReceived: false,
+    _closeFrameSent: false,
+    _closeMessage: <Buffer >,
+    _closeTimer: null,
+    _errorEmitted: true,
+    _extensions: {},
+    _paused: false,
+    _protocol: '',
+    _readyState: 3,
+    _receiver: null,
+    _sender: null,
+    _socket: null,
+    _bufferedAmount: 0,
+    _isServer: false,
+    _redirects: 0,
+    _autoPong: true,
+    _url: 'wss://./v2',
+    _req: null,
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false
+  },
+  [Symbol(kType)]: 'error',
+  [Symbol(kError)]: Error: getaddrinfo ENOTFOUND .
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: '.'
+  },
+  [Symbol(kMessage)]: 'getaddrinfo ENOTFOUND .'
+}
+11:30:54 PM [express] POST /api/material-types 500 in 24ms :: {"message":"Failed to create material t…

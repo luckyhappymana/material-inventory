@@ -1,0 +1,43 @@
+Failed to load resource: the server responded with a status of 404 ()
+/api/materials?:1 
+ Failed to load resource: the server responded with a status of 404 ()
+material-inventory-11eb1.web.app/:1 Access to fetch at 'https://us-central1-undefined.cloudfunctions.net/api/api/material-types' from origin 'https://material-inventory-11eb1.web.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+index-CEZfHbfu.js:48 
+ GET https://us-central1-undefined.cloudfunctions.net/api/api/material-types net::ERR_FAILED 404 (Not Found)
+index-CEZfHbfu.js:178 
+ GET https://material-inventory-11eb1.web.app/api/material-types 404 (Not Found)
+index-CEZfHbfu.js:178 
+ GET https://material-inventory-11eb1.web.app/api/material-types 404 (Not Found)
+index-CEZfHbfu.js:178 
+ GET https://material-inventory-11eb1.web.app/api/stats 404 (Not Found)
+material-inventory-11eb1.web.app/:1 Access to fetch at 'https://us-central1-undefined.cloudfunctions.net/api/api/material-types' from origin 'https://material-inventory-11eb1.web.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+index-CEZfHbfu.js:48 
+ GET https://us-central1-undefined.cloudfunctions.net/api/api/material-types net::ERR_FAILED 404 (Not Found)
+index-CEZfHbfu.js:222 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+material-inventory-11eb1.web.app/:1 Access to fetch at 'https://us-central1-undefined.cloudfunctions.net/api/api/material-types' from origin 'https://material-inventory-11eb1.web.app' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+index-CEZfHbfu.js:48 
+ POST https://us-central1-undefined.cloudfunctions.net/api/api/material-types net::ERR_FAILED
+index-CEZfHbfu.js:228 Material type creation/update error: TypeError: Failed to fetch
+    at fr (index-CEZfHbfu.js:48:42875)
+    at Object.mutationFn (index-CEZfHbfu.js:228:114382)
+    at Object.fn (index-CEZfHbfu.js:48:19522)
+    at w (index-CEZfHbfu.js:48:9963)
+    at Object.start (index-CEZfHbfu.js:48:10422)
+    at _y.execute (index-CEZfHbfu.js:48:20327)
+    at async v (index-CEZfHbfu.js:228:115089)
+    at async index-CEZfHbfu.js:228:22923
+v	@	index-CEZfHbfu.js:228
+await in v		
+(anonymous)	@	index-CEZfHbfu.js:228
+await in (anonymous)		
+mE	@	index-CEZfHbfu.js:37
+yE	@	index-CEZfHbfu.js:37
+vE	@	index-CEZfHbfu.js:37
+Sm	@	index-CEZfHbfu.js:37
+l0	@	index-CEZfHbfu.js:37
+(anonymous)	@	index-CEZfHbfu.js:37
+Ap	@	index-CEZfHbfu.js:40
+Ax	@	index-CEZfHbfu.js:37
+Dc	@	index-CEZfHbfu.js:37
+op	@	index-CEZfHbfu.js:37
+OE	@	index-CEZfHbfu.js:37
